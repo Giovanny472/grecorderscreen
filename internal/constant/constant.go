@@ -21,3 +21,11 @@ const (
 		}
 	` + "\x00"
 )
+
+type MouseStatus int
+
+const (
+	MouseNoData MouseStatus = iota
+	MousePress
+	MouseRelease
+)
