@@ -23,7 +23,7 @@ var glf *glform
 func NewGlfw() model.GlFw {
 
 	if glf == nil {
-		glf = &glform{mouse: NewMouse()}
+		glf = &glform{mouse: NewMouse(), opengl: 0}
 	}
 	return glf
 }
