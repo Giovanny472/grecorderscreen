@@ -9,10 +9,10 @@ import (
 )
 
 type mouse struct {
-	startPosX int
-	endPosX   int
-	startPosY int
-	endPosY   int
+	startPosX float64
+	endPosX   float64
+	startPosY float64
+	endPosY   float64
 
 	mouseStat constant.MouseStatus
 }
@@ -26,42 +26,44 @@ func NewMouse() model.Mouse {
 	return mo
 }
 
-func (m *mouse) GetStartPosX() int {
+func (m *mouse) GetStartPosX() float64 {
 	return m.startPosX
 }
 
-func (m *mouse) GetEndPosX() int {
+func (m *mouse) GetEndPosX() float64 {
 	return m.endPosX
 }
 
-func (m *mouse) GetStartPosY() int {
+func (m *mouse) GetStartPosY() float64 {
 	return m.startPosY
 }
 
-func (m *mouse) GetEndPosY() int {
+func (m *mouse) GetEndPosY() float64 {
 	return m.endPosY
 }
 
 func (m *mouse) MousePos(w *glfw.Window, xpos float64, ypos float64) {
 
-	switch m.mouseStat {
-	case constant.MousePress:
-		{
-			m.startPosX = int(xpos)
-			m.startPosY = int(ypos)
+	/*
+		switch m.mouseStat {
+		case constant.MousePress:
+			{
+				m.startPosX = int(xpos)
+				m.startPosY = int(ypos)
 
-			fmt.Println("x start:", xpos, ", y:", ypos)
+				fmt.Println("x start:", xpos, ", y:", ypos)
+			}
+
+		case constant.MouseRelease:
+			{
+				m.endPosX = int(xpos)
+				m.endPosY = int(ypos)
+
+				fmt.Println("x end:", xpos, ", y:", ypos)
+			}
 		}
 
-	case constant.MouseRelease:
-		{
-			m.endPosX = int(xpos)
-			m.endPosY = int(ypos)
-
-			fmt.Println("x end:", xpos, ", y:", ypos)
-		}
-	}
-
+	*/
 }
 
 func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
@@ -70,12 +72,26 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 		fmt.Println("boton izq")
 
 		if action == glfw.Press {
-			m.mouseStat = constant.MousePress
-			fmt.Println("boton izq presss")
+
+			if w != nil {
+				fmt.Println("boton izq presss")
+
+				m.startPosX, m.startPosY = w.GetCursorPos()
+				m.mouseStat = constant.MousePress
+				fmt.Println("x start: ", m.startPosX, ", y start:", m.startPosY)
+			}
+
 		}
 		if action == glfw.Release {
-			m.mouseStat = constant.MouseRelease
-			fmt.Println("boton izq  releaseee")
+			if w != nil {
+
+				fmt.Println("boton izq release")
+
+				m.endPosX, m.endPosY = w.GetCursorPos()
+				m.mouseStat = constant.MouseRelease
+				fmt.Println("x release: ", m.endPosX, ", y start:", m.endPosY)
+			}
+
 		}
 	}
 }
