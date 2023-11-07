@@ -1,4 +1,4 @@
-package common
+package constant
 
 const (
 	ScreenWidth  = 800

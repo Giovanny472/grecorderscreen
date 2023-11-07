@@ -4,7 +4,8 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/Giovanny472/grecordscreen/internal/common"
+	"github.com/Giovanny472/grecordscreen/internal/constant"
+	"github.com/Giovanny472/grecordscreen/internal/message"
 	"github.com/Giovanny472/grecordscreen/internal/model"
 	"github.com/go-gl/gl/v4.1-core/gl" //"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -40,7 +41,7 @@ func (g *glform) initGLFW() {
 
 	err := glfw.Init()
 	if err != nil {
-		log.Fatal("невозможно инициализировать glfw")
+		log.Fatal(message.GlfwInit)
 	}
 
 	glfw.WindowHint(glfw.TransparentFramebuffer, glfw.True)
@@ -52,9 +53,9 @@ func (g *glform) initGLFW() {
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
 	// создание glfw
-	g.screenGlfw, g.err = glfw.CreateWindow(common.ScreenWidth, common.ScreenWidth, common.AppName, nil, nil)
+	g.screenGlfw, g.err = glfw.CreateWindow(constant.ScreenWidth, constant.ScreenWidth, constant.AppName, nil, nil)
 	if g.err != nil {
-		log.Fatal("невозможно создать окно Screen")
+		log.Fatal(message.GlfwCreateWindow)
 	}
 
 	g.screenGlfw.SetCursorPosCallback(g.mouse.MousePos)
@@ -71,7 +72,7 @@ func (g *glform) initOpenGL() {
 
 	err := gl.Init()
 	if err != nil {
-		log.Fatal("невозможно инициализировать opengl")
+		log.Fatal(message.OpenGLInit)
 	}
 	version := gl.GoStr(gl.GetString(gl.VERSION))
 	log.Println("OpenGL version", version)
