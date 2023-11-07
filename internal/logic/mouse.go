@@ -90,6 +90,7 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 				m.endPosX, m.endPosY = w.GetCursorPos()
 				m.mouseStat = constant.MouseRelease
 				fmt.Println("x release: ", m.endPosX, ", y start:", m.endPosY)
+
 			}
 
 		}

@@ -89,8 +89,9 @@ func (g *glform) programLoop() {
 		glfw.PollEvents()
 
 		// цвет background
-		gl.ClearColor(0.1, 0.1, 0.1, 0.1)
+		gl.ClearColor(0.1, 0.1, 0.1, 0.05)
 		gl.Clear(gl.COLOR_BUFFER_BIT)
+		g.screenGlfw.SetOpacity(0.3)
 
 		g.screenGlfw.SwapBuffers()
 	}
