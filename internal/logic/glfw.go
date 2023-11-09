@@ -61,14 +61,18 @@ func (g *glform) initGLFW() {
 		log.Fatal(message.GlfwCreateWindow)
 	}
 
-	g.screenGlfw.SetCursorPosCallback(g.mouse.MousePos)
-	g.screenGlfw.SetMouseButtonCallback(g.mouse.MouseButton)
-
 	g.screenGlfw.MakeContextCurrent()
 
 	// изменение иконки cursor
 	aCursor := glfw.CreateStandardCursor(glfw.CrosshairCursor)
 	glfw.GetCurrentContext().SetCursor(aCursor)
+
+	// координаты
+	g.screenGlfw.SetCursorPosCallback(g.mouse.MousePos)
+	g.screenGlfw.SetMouseButtonCallback(g.mouse.MouseButton)
+
+	// выти из приложения через escape
+	g.screenGlfw.SetKeyCallback(KeyPressCallback)
 }
 
 func (g *glform) initOpenGL() {
@@ -134,13 +138,13 @@ func (g *glform) programLoop() {
 		glfw.PollEvents()
 
 		// цвет background
-		gl.ClearColor(0.1, 0.1, 0.1, 0.04)
+		//gl.ClearColor(0.1, 0.1, 0.1, 0)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		// draw loop
 		gl.UseProgram(g.openglProg)
 		gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
-		g.screenGlfw.SetOpacity(0.3)
+		g.screenGlfw.SetOpacity(0.5)
 
 		gl.BindVertexArray(vao)
 		gl.DrawArrays(gl.TRIANGLES, 0, 9)
@@ -184,4 +188,11 @@ func (g *glform) makeVao() uint32 {
 
 func (g *glform) draw(vao uint32) {
 
+}
+
+func KeyPressCallback(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+
+	if key == glfw.KeyEscape {
+		window.SetShouldClose(true)
+	}
 }
