@@ -10,8 +10,8 @@ import (
 
 type mouse struct {
 	startPosX float64
-	endPosX   float64
 	startPosY float64
+	endPosX   float64
 	endPosY   float64
 
 	mouseStat constant.MouseStatus
@@ -55,26 +55,12 @@ func (m *mouse) GetEndPosY() float64 {
 
 func (m *mouse) MousePos(w *glfw.Window, xpos float64, ypos float64) {
 
-	/*
-		switch m.mouseStat {
-		case constant.MousePress:
-			{
-				m.startPosX = int(xpos)
-				m.startPosY = int(ypos)
+	if m.mouseStat == constant.MousePress {
+		m.endPosX, m.endPosY = xpos, ypos
 
-				fmt.Println("x start:", xpos, ", y:", ypos)
-			}
-
-		case constant.MouseRelease:
-			{
-				m.endPosX = int(xpos)
-				m.endPosY = int(ypos)
-
-				fmt.Println("x end:", xpos, ", y:", ypos)
-			}
-		}
-
-	*/
+		// callbackk OnCoord
+		m.onCoord(float32(m.startPosX), float32(m.startPosY), float32(m.endPosX), float32(m.endPosY))
+	}
 }
 
 func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
@@ -89,7 +75,9 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 
 				m.startPosX, m.startPosY = w.GetCursorPos()
 				m.mouseStat = constant.MousePress
-				fmt.Println("x start: ", m.startPosX, ", y start:", m.startPosY)
+
+				// callbackk OnCoord
+				m.onCoord(float32(m.startPosX), float32(m.startPosY), 0.0, 0.0)
 			}
 
 		}
@@ -100,7 +88,7 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 
 				m.endPosX, m.endPosY = w.GetCursorPos()
 				m.mouseStat = constant.MouseRelease
-				fmt.Println("x release: ", m.endPosX, ", y start:", m.endPosY)
+				fmt.Println("x release: ", m.endPosX, ", y release:", m.endPosY)
 
 				// callbackk OnMouseRelease
 				m.onRelease()

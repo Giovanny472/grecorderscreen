@@ -14,9 +14,12 @@ import (
 )
 
 type glform struct {
+	formWidth  int
+	formHeigth int
 	screenGlfw *glfw.Window
 	openglProg uint32
 	mouse      model.Mouse
+	square     []float32
 	err        error
 }
 
@@ -29,6 +32,9 @@ func NewGlfw() model.GlFw {
 
 		// on release
 		glf.mouse.SetMouseReleaseLeftButon(glf.onMouseRelease)
+
+		// on get coordinate
+		glf.mouse.SetMouseCoord(glf.coordinatesCallBack)
 	}
 
 	return glf
@@ -65,6 +71,9 @@ func (g *glform) initGLFW() {
 	}
 
 	g.screenGlfw.MakeContextCurrent()
+
+	// размер окна
+	g.formWidth, g.formHeigth = g.screenGlfw.GetSize()
 
 	// изменение иконки cursor
 	aCursor := glfw.CreateStandardCursor(glfw.CrosshairCursor)
@@ -160,17 +169,17 @@ func (g *glform) programLoop() {
 func (g *glform) makeVao() uint32 {
 
 	points := []float32{
-		-0.5, 0.5, 0,
-		-0.5, -0.5, 0,
-		0.5, -0.5, 0,
+		-1, 1, 0,
+		-1, -1, 0,
+		1, -1, 0,
 
-		-0.5, 0.5, 0,
-		0.5, 0.5, 0,
-		0.5, -0.5, 0,
+		-1, 1, 0,
+		1, 1, 0,
+		1, -1, 0,
 
-		0.5, 0.5, 0,
-		0.5, -0.5, 0,
-		-0.5, -0.5, 0,
+		1, 1, 0,
+		1, -1, 0,
+		-1, -1, 0,
 	}
 
 	var VBO uint32
@@ -202,7 +211,8 @@ func (g *glform) keyPressCallback(window *glfw.Window, key glfw.Key, scancode in
 
 func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
 
-	//	fmt.Println("fin programma release")
+	fmt.Println("coordinatesCallBack")
+	fmt.Println("xStart: ", xStart, ", yStart:", yStart, " ,  xEnd: ", xEnd, " , yEnd: ", yEnd)
 	//g.screenGlfw.SetShouldClose(true)
 }
 
@@ -214,5 +224,5 @@ func (g *glform) onMouseRelease() {
 	// передаем район в clipboard
 
 	// закрываем программу
-	g.screenGlfw.SetShouldClose(true)
+	//g.screenGlfw.SetShouldClose(true)
 }
