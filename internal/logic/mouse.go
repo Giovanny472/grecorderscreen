@@ -15,6 +15,9 @@ type mouse struct {
 	endPosY   float64
 
 	mouseStat constant.MouseStatus
+
+	onRelease func()
+	onCoord   model.OnMouseCoord
 }
 
 var mo *mouse
@@ -24,6 +27,14 @@ func NewMouse() model.Mouse {
 		mo = &mouse{startPosX: 0, endPosX: 0, startPosY: 0, endPosY: 0, mouseStat: constant.MouseNoData}
 	}
 	return mo
+}
+
+func (m *mouse) SetMouseReleaseLeftButon(callBackRelease func()) {
+	m.onRelease = callBackRelease
+}
+
+func (m *mouse) SetMouseCoord(callBackCoord model.OnMouseCoord) {
+	m.onCoord = callBackCoord
 }
 
 func (m *mouse) GetStartPosX() float64 {
@@ -91,6 +102,8 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 				m.mouseStat = constant.MouseRelease
 				fmt.Println("x release: ", m.endPosX, ", y start:", m.endPosY)
 
+				// callbackk OnMouseRelease
+				m.onRelease()
 			}
 
 		}

@@ -17,8 +17,7 @@ type glform struct {
 	screenGlfw *glfw.Window
 	openglProg uint32
 	mouse      model.Mouse
-
-	err error
+	err        error
 }
 
 var glf *glform
@@ -27,7 +26,11 @@ func NewGlfw() model.GlFw {
 
 	if glf == nil {
 		glf = &glform{mouse: NewMouse(), openglProg: 0}
+
+		// on release
+		glf.mouse.SetMouseReleaseLeftButon(glf.onMouseRelease)
 	}
+
 	return glf
 }
 
@@ -72,7 +75,7 @@ func (g *glform) initGLFW() {
 	g.screenGlfw.SetMouseButtonCallback(g.mouse.MouseButton)
 
 	// выти из приложения через escape
-	g.screenGlfw.SetKeyCallback(KeyPressCallback)
+	g.screenGlfw.SetKeyCallback(g.keyPressCallback)
 }
 
 func (g *glform) initOpenGL() {
@@ -190,9 +193,26 @@ func (g *glform) draw(vao uint32) {
 
 }
 
-func KeyPressCallback(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+func (g *glform) keyPressCallback(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 
 	if key == glfw.KeyEscape {
 		window.SetShouldClose(true)
 	}
+}
+
+func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
+
+	//	fmt.Println("fin programma release")
+	//g.screenGlfw.SetShouldClose(true)
+}
+
+// callback onrelease
+func (g *glform) onMouseRelease() {
+
+	// получаем район для screeshot
+
+	// передаем район в clipboard
+
+	// закрываем программу
+	g.screenGlfw.SetShouldClose(true)
 }
