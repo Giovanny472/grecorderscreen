@@ -14,13 +14,22 @@ import (
 )
 
 type glform struct {
+
+	// размер окна
 	formWidth  int
 	formHeigth int
+
+	// окно
 	screenGlfw *glfw.Window
 	openglProg uint32
-	mouse      model.Mouse
-	square     []float32
-	err        error
+
+	// мышь
+	mouse model.Mouse
+
+	// квадрат точек для рисование области screenshot
+	square []float32
+
+	err error
 }
 
 var glf *glform
@@ -212,8 +221,11 @@ func (g *glform) keyPressCallback(window *glfw.Window, key glfw.Key, scancode in
 func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
 
 	fmt.Println("coordinatesCallBack")
-	fmt.Println("xStart: ", xStart, ", yStart:", yStart, " ,  xEnd: ", xEnd, " , yEnd: ", yEnd)
-	//g.screenGlfw.SetShouldClose(true)
+	fmt.Println("xStart: ", xStart, ", yStart:", yStart, " ,  xEnd:", xEnd, ", yEnd:", yEnd)
+
+	// нормализация
+	//
+
 }
 
 // callback onrelease

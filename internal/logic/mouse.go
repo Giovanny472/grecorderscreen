@@ -1,8 +1,6 @@
 package logic
 
 import (
-	"fmt"
-
 	"github.com/Giovanny472/grecordscreen/internal/constant"
 	"github.com/Giovanny472/grecordscreen/internal/model"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -66,12 +64,10 @@ func (m *mouse) MousePos(w *glfw.Window, xpos float64, ypos float64) {
 func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
 
 	if button == glfw.MouseButtonLeft {
-		fmt.Println("boton izq")
 
 		if action == glfw.Press {
 
 			if w != nil {
-				fmt.Println("boton izq presss")
 
 				m.startPosX, m.startPosY = w.GetCursorPos()
 				m.mouseStat = constant.MousePress
@@ -84,11 +80,8 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 		if action == glfw.Release {
 			if w != nil {
 
-				fmt.Println("boton izq release")
-
-				m.endPosX, m.endPosY = w.GetCursorPos()
+				// изменение состояние курсора
 				m.mouseStat = constant.MouseRelease
-				fmt.Println("x release: ", m.endPosX, ", y release:", m.endPosY)
 
 				// callbackk OnMouseRelease
 				m.onRelease()
