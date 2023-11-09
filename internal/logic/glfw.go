@@ -17,7 +17,8 @@ type glform struct {
 	screenGlfw *glfw.Window
 	openglProg uint32
 	mouse      model.Mouse
-	err        error
+
+	err error
 }
 
 var glf *glform
@@ -128,21 +129,22 @@ func (g *glform) programLoop() {
 	for !g.screenGlfw.ShouldClose() {
 
 		vao := g.makeVao()
-		g.draw(vao)
+		//g.draw(vao)
 
 		glfw.PollEvents()
 
 		// цвет background
-		gl.ClearColor(0.1, 0.1, 0.1, 0.05)
-
+		gl.ClearColor(0.1, 0.1, 0.1, 0.04)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.UseProgram(g.openglProg)
 
+		// draw loop
+		gl.UseProgram(g.openglProg)
+		gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
 		g.screenGlfw.SetOpacity(0.3)
 
 		gl.BindVertexArray(vao)
-		triangle := []float32{0, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0}
-		gl.DrawArrays(gl.TRIANGLES, 0, int32(len(triangle)/3))
+		gl.DrawArrays(gl.TRIANGLES, 0, 9)
+		gl.BindVertexArray(0)
 
 		g.screenGlfw.SwapBuffers()
 	}
@@ -150,21 +152,33 @@ func (g *glform) programLoop() {
 
 func (g *glform) makeVao() uint32 {
 
-	points := []float32{0, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0}
+	points := []float32{
+		-0.5, 0.5, 0,
+		-0.5, -0.5, 0,
+		0.5, -0.5, 0,
 
-	var vbo uint32
-	gl.GenBuffers(1, &vbo)
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
+		-0.5, 0.5, 0,
+		0.5, 0.5, 0,
+		0.5, -0.5, 0,
+
+		0.5, 0.5, 0,
+		0.5, -0.5, 0,
+		-0.5, -0.5, 0,
+	}
+
+	var VBO uint32
+	gl.GenBuffers(1, &VBO)
+	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
 	gl.BufferData(gl.ARRAY_BUFFER, 4*len(points), gl.Ptr(points), gl.STATIC_DRAW)
 
-	var vao uint32
-	gl.GenVertexArrays(1, &vao)
-	gl.BindVertexArray(vao)
+	var VAO uint32
+	gl.GenVertexArrays(1, &VAO)
+	gl.BindVertexArray(VAO)
 	gl.EnableVertexAttribArray(0)
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
+	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
 	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
 
-	return vao
+	return VAO
 
 }
 
