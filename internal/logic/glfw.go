@@ -154,48 +154,32 @@ func (g *glform) programLoop() {
 
 	for !g.screenGlfw.ShouldClose() {
 
-		vao := g.makeVao()
-		//g.draw(vao)
-
-		glfw.PollEvents()
-
-		// цвет background
-		//gl.ClearColor(0.1, 0.1, 0.1, 0)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-		// draw loop
 		gl.UseProgram(g.openglProg)
-		gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
-		g.screenGlfw.SetOpacity(0.5)
+		//gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
+		//g.screenGlfw.SetOpacity(0.5)
+
+		vao, _ := g.makeVao()
+		//if !ok {
+
+		//g.draw(vao)
 
 		gl.BindVertexArray(vao)
 		gl.DrawArrays(gl.TRIANGLES, 0, 9)
-		gl.BindVertexArray(0)
+		//gl.BindVertexArray(0)
 
+		//}
+
+		//gl.BindVertexArray(0)
+		glfw.PollEvents()
 		g.screenGlfw.SwapBuffers()
 	}
 }
 
-func (g *glform) makeVao() uint32 {
-
-	/*
-		points := []float32{
-			-1, 1, 0,
-			-1, -1, 0,
-			1, -1, 0,
-
-			-1, 1, 0,
-			1, 1, 0,
-			1, -1, 0,
-
-			1, 1, 0,
-			1, -1, 0,
-			-1, -1, 0,
-		}
-	*/
+func (g *glform) makeVao() (uint32, bool) {
 
 	if len(g.pointssquare) == 0 {
-		return 0
+		return 0, false
 	}
 
 	var VBO uint32
@@ -210,7 +194,7 @@ func (g *glform) makeVao() uint32 {
 	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
 	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
 
-	return VAO
+	return VAO, true
 
 }
 
@@ -290,7 +274,6 @@ func (g *glform) normalize(xs, ys, xe, ye float32) {
 		ye = float32(mY) - ye
 		ye = float32(math.Abs(float64(ye)))
 	}
-	fmt.Println("xS: ", xs, ", yS:", ys, " ,  xE:", xe, ", yE:", ye)
 
 	// нормализация
 	var newXs, newYs, newXe, newYe float32
@@ -301,6 +284,42 @@ func (g *glform) normalize(xs, ys, xe, ye float32) {
 	newYe = (ye * 1.0) / float32(mY)
 	fmt.Println("nxS: ", newXs, ", nyS:", newYs, " ,  nxE:", newXe, ", nyE:", newYe)
 
+	// создание 2Points
+	p3x := newXs
+	p3y := newYe
+
+	p4x := newXe
+	p4y := newYs
+
 	// создание 3 triangles
-	newXs = newYs + newXe + newYe + newXs
+	g.pointssquare = append(g.pointssquare, newXs)
+	g.pointssquare = append(g.pointssquare, newYs)
+	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare = append(g.pointssquare, p3x)
+	g.pointssquare = append(g.pointssquare, p3y)
+	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare = append(g.pointssquare, p4x)
+	g.pointssquare = append(g.pointssquare, p4y)
+	g.pointssquare = append(g.pointssquare, 0)
+
+	g.pointssquare = append(g.pointssquare, newXe)
+	g.pointssquare = append(g.pointssquare, newYe)
+	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare = append(g.pointssquare, p3x)
+	g.pointssquare = append(g.pointssquare, p3y)
+	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare = append(g.pointssquare, p4x)
+	g.pointssquare = append(g.pointssquare, p4y)
+	g.pointssquare = append(g.pointssquare, 0)
+
+	g.pointssquare = append(g.pointssquare, newXs)
+	g.pointssquare = append(g.pointssquare, newYs)
+	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare = append(g.pointssquare, newXe)
+	g.pointssquare = append(g.pointssquare, newYe)
+	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare = append(g.pointssquare, p3x)
+	g.pointssquare = append(g.pointssquare, p3y)
+	g.pointssquare = append(g.pointssquare, 0)
+
 }
