@@ -3,6 +3,7 @@ package logic
 import (
 	"fmt"
 	"log"
+	"math"
 	"runtime"
 	"strings"
 
@@ -27,7 +28,7 @@ type glform struct {
 	mouse model.Mouse
 
 	// квадрат точек для рисование области screenshot
-	square []float32
+	pointssquare []float32
 
 	err error
 }
@@ -177,24 +178,30 @@ func (g *glform) programLoop() {
 
 func (g *glform) makeVao() uint32 {
 
-	points := []float32{
-		-1, 1, 0,
-		-1, -1, 0,
-		1, -1, 0,
+	/*
+		points := []float32{
+			-1, 1, 0,
+			-1, -1, 0,
+			1, -1, 0,
 
-		-1, 1, 0,
-		1, 1, 0,
-		1, -1, 0,
+			-1, 1, 0,
+			1, 1, 0,
+			1, -1, 0,
 
-		1, 1, 0,
-		1, -1, 0,
-		-1, -1, 0,
+			1, 1, 0,
+			1, -1, 0,
+			-1, -1, 0,
+		}
+	*/
+
+	if len(g.pointssquare) == 0 {
+		return 0
 	}
 
 	var VBO uint32
 	gl.GenBuffers(1, &VBO)
 	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
-	gl.BufferData(gl.ARRAY_BUFFER, 4*len(points), gl.Ptr(points), gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, 4*len(g.pointssquare), gl.Ptr(g.pointssquare), gl.STATIC_DRAW)
 
 	var VAO uint32
 	gl.GenVertexArrays(1, &VAO)
@@ -224,17 +231,76 @@ func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
 	fmt.Println("xStart: ", xStart, ", yStart:", yStart, " ,  xEnd:", xEnd, ", yEnd:", yEnd)
 
 	// нормализация
-	//
+	g.normalize(xStart, yStart, xEnd, yEnd)
 
+	// рисование квадрата
 }
 
 // callback onrelease
 func (g *glform) onMouseRelease() {
 
-	// получаем район для screeshot
-
 	// передаем район в clipboard
 
 	// закрываем программу
 	//g.screenGlfw.SetShouldClose(true)
+}
+
+func (g *glform) normalize(xs, ys, xe, ye float32) {
+
+	// clear
+	clear(g.pointssquare)
+
+	// средний размер
+	mX := g.formWidth / 2
+	mY := g.formHeigth / 2
+	fmt.Println("mx:", mX, ",mY:", mY)
+
+	if xs < float32(mX) {
+		xs = xs - float32(mX)
+		xs = float32(math.Abs(float64(xs)))
+		xs *= -1
+	} else {
+		xs = xs - float32(mX)
+		xs = float32(math.Abs(float64(xs)))
+	}
+
+	if xe < float32(mX) {
+		xe = xe - float32(mX)
+		xe = float32(math.Abs(float64(xe)))
+		xe *= -1
+	} else {
+		xe = xe - float32(mX)
+		xe = float32(math.Abs(float64(xe)))
+	}
+
+	if ys > float32(mY) {
+		ys = ys - float32(mY)
+		ys = float32(math.Abs(float64(ys)))
+		ys *= -1
+	} else {
+		ys = ys - float32(mY)
+		ys = float32(math.Abs(float64(ys)))
+	}
+
+	if ye > float32(mY) {
+		ye = float32(mY) - ye
+		ye = float32(math.Abs(float64(ye)))
+		ye *= -1
+	} else {
+		ye = float32(mY) - ye
+		ye = float32(math.Abs(float64(ye)))
+	}
+	fmt.Println("xS: ", xs, ", yS:", ys, " ,  xE:", xe, ", yE:", ye)
+
+	// нормализация
+	var newXs, newYs, newXe, newYe float32
+	newXs = (xs * 1.0) / float32(mX)
+	newXe = (xe * 1.0) / float32(mX)
+
+	newYs = (ys * 1.0) / float32(mY)
+	newYe = (ye * 1.0) / float32(mY)
+	fmt.Println("nxS: ", newXs, ", nyS:", newYs, " ,  nxE:", newXe, ", nyE:", newYe)
+
+	// создание 3 triangles
+	newXs = newYs + newXe + newYe + newXs
 }
