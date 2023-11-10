@@ -30,6 +30,9 @@ type glform struct {
 	// квадрат точек для рисование области screenshot
 	pointssquare []float32
 
+	// vao
+	vao uint32
+
 	err error
 }
 
@@ -38,13 +41,18 @@ var glf *glform
 func NewGlfw() model.GlFw {
 
 	if glf == nil {
-		glf = &glform{mouse: NewMouse(), openglProg: 0}
+
+		glf = &glform{mouse: NewMouse(), openglProg: 0, vao: 0}
 
 		// on release
 		glf.mouse.SetMouseReleaseLeftButon(glf.onMouseRelease)
 
 		// on get coordinate
 		glf.mouse.SetMouseCoord(glf.coordinatesCallBack)
+
+		// points создание
+		glf.pointssquare = make([]float32, 27)
+
 	}
 
 	return glf
@@ -156,15 +164,12 @@ func (g *glform) programLoop() {
 
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(g.openglProg)
-		//gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
-		//g.screenGlfw.SetOpacity(0.5)
+		gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
+		g.screenGlfw.SetOpacity(0.5)
 
-		vao, _ := g.makeVao()
-		//if !ok {
+		//vao := g.makeVao()
 
-		//g.draw(vao)
-
-		gl.BindVertexArray(vao)
+		gl.BindVertexArray(g.vao)
 		gl.DrawArrays(gl.TRIANGLES, 0, 9)
 		//gl.BindVertexArray(0)
 
@@ -176,11 +181,7 @@ func (g *glform) programLoop() {
 	}
 }
 
-func (g *glform) makeVao() (uint32, bool) {
-
-	if len(g.pointssquare) == 0 {
-		return 0, false
-	}
+func (g *glform) makeVao() uint32 {
 
 	var VBO uint32
 	gl.GenBuffers(1, &VBO)
@@ -194,11 +195,7 @@ func (g *glform) makeVao() (uint32, bool) {
 	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
 	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
 
-	return VAO, true
-
-}
-
-func (g *glform) draw(vao uint32) {
+	return VAO
 
 }
 
@@ -218,6 +215,7 @@ func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
 	g.normalize(xStart, yStart, xEnd, yEnd)
 
 	// рисование квадрата
+	g.vao = g.makeVao()
 }
 
 // callback onrelease
@@ -227,12 +225,24 @@ func (g *glform) onMouseRelease() {
 
 	// закрываем программу
 	//g.screenGlfw.SetShouldClose(true)
+
+	//g.pointssquare = g.pointssquare[:0]
+	// clear
+	clear(g.pointssquare)
+
+	// рисование квадрата
+	g.vao = g.makeVao()
+
 }
 
 func (g *glform) normalize(xs, ys, xe, ye float32) {
 
 	// clear
+	// for idx := range g.pointssquare {
+	// 	g.pointssquare[idx] = 0
+	// }
 	clear(g.pointssquare)
+	//g.pointssquare = g.pointssquare[:0]
 
 	// средний размер
 	mX := g.formWidth / 2
@@ -292,34 +302,34 @@ func (g *glform) normalize(xs, ys, xe, ye float32) {
 	p4y := newYs
 
 	// создание 3 triangles
-	g.pointssquare = append(g.pointssquare, newXs)
-	g.pointssquare = append(g.pointssquare, newYs)
-	g.pointssquare = append(g.pointssquare, 0)
-	g.pointssquare = append(g.pointssquare, p3x)
-	g.pointssquare = append(g.pointssquare, p3y)
-	g.pointssquare = append(g.pointssquare, 0)
-	g.pointssquare = append(g.pointssquare, p4x)
-	g.pointssquare = append(g.pointssquare, p4y)
-	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare[0] = newXs
+	g.pointssquare[1] = newYs
+	g.pointssquare[2] = 0
+	g.pointssquare[3] = p3x
+	g.pointssquare[4] = p3y
+	g.pointssquare[5] = 0
+	g.pointssquare[6] = p4x
+	g.pointssquare[7] = p4y
+	g.pointssquare[8] = 0
 
-	g.pointssquare = append(g.pointssquare, newXe)
-	g.pointssquare = append(g.pointssquare, newYe)
-	g.pointssquare = append(g.pointssquare, 0)
-	g.pointssquare = append(g.pointssquare, p3x)
-	g.pointssquare = append(g.pointssquare, p3y)
-	g.pointssquare = append(g.pointssquare, 0)
-	g.pointssquare = append(g.pointssquare, p4x)
-	g.pointssquare = append(g.pointssquare, p4y)
-	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare[9] = newXe
+	g.pointssquare[10] = newYe
+	g.pointssquare[11] = 0
+	g.pointssquare[12] = p3x
+	g.pointssquare[13] = p3y
+	g.pointssquare[14] = 0
+	g.pointssquare[15] = p4x
+	g.pointssquare[16] = p4y
+	g.pointssquare[17] = 0
 
-	g.pointssquare = append(g.pointssquare, newXs)
-	g.pointssquare = append(g.pointssquare, newYs)
-	g.pointssquare = append(g.pointssquare, 0)
-	g.pointssquare = append(g.pointssquare, newXe)
-	g.pointssquare = append(g.pointssquare, newYe)
-	g.pointssquare = append(g.pointssquare, 0)
-	g.pointssquare = append(g.pointssquare, p3x)
-	g.pointssquare = append(g.pointssquare, p3y)
-	g.pointssquare = append(g.pointssquare, 0)
+	g.pointssquare[18] = newXs
+	g.pointssquare[19] = newYs
+	g.pointssquare[20] = 0
+	g.pointssquare[21] = newXe
+	g.pointssquare[22] = newYe
+	g.pointssquare[23] = 0
+	g.pointssquare[24] = p3x
+	g.pointssquare[25] = p3y
+	g.pointssquare[26] = 0
 
 }

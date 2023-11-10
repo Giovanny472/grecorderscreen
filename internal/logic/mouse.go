@@ -70,10 +70,11 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 			if w != nil {
 
 				m.startPosX, m.startPosY = w.GetCursorPos()
+				m.endPosX, m.endPosY = w.GetCursorPos()
 				m.mouseStat = constant.MousePress
 
 				// callbackk OnCoord
-				m.onCoord(float32(m.startPosX), float32(m.startPosY), 0.0, 0.0)
+				m.onCoord(float32(m.startPosX), float32(m.startPosY), float32(m.endPosX), float32(m.endPosY))
 			}
 
 		}
