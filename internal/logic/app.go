@@ -11,7 +11,6 @@ type app struct {
 var ap *app
 
 func NewApp() model.IApp {
-
 	if ap == nil {
 		ap = &app{screen: NewScreen()}
 	}
@@ -19,7 +18,5 @@ func NewApp() model.IApp {
 }
 
 func (a *app) Exec() {
-
 	a.screen.Show()
-
 }

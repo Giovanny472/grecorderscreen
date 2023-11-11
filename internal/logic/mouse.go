@@ -54,6 +54,7 @@ func (m *mouse) GetEndPosY() float64 {
 func (m *mouse) MousePos(w *glfw.Window, xpos float64, ypos float64) {
 
 	if m.mouseStat == constant.MousePress {
+
 		m.endPosX, m.endPosY = xpos, ypos
 
 		// callbackk OnCoord
@@ -68,9 +69,11 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 		if action == glfw.Press {
 
 			if w != nil {
-
+				// координаты
 				m.startPosX, m.startPosY = w.GetCursorPos()
 				m.endPosX, m.endPosY = w.GetCursorPos()
+
+				// action mouse
 				m.mouseStat = constant.MousePress
 
 				// callbackk OnCoord
@@ -79,8 +82,8 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 
 		}
 		if action == glfw.Release {
-			if w != nil {
 
+			if w != nil {
 				// изменение состояние курсора
 				m.mouseStat = constant.MouseRelease
 

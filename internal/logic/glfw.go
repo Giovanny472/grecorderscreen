@@ -167,15 +167,9 @@ func (g *glform) programLoop() {
 		gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
 		g.screenGlfw.SetOpacity(0.5)
 
-		//vao := g.makeVao()
-
 		gl.BindVertexArray(g.vao)
 		gl.DrawArrays(gl.TRIANGLES, 0, 9)
-		//gl.BindVertexArray(0)
 
-		//}
-
-		//gl.BindVertexArray(0)
 		glfw.PollEvents()
 		g.screenGlfw.SwapBuffers()
 	}
@@ -221,17 +215,23 @@ func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
 // callback onrelease
 func (g *glform) onMouseRelease() {
 
-	// передаем район в clipboard
+	// инициализация screenshot
+	scr := NewScreenshot()
+	scr.SetRectScreen(int(g.mouse.GetStartPosX()), int(g.mouse.GetStartPosY()),
+		int(g.mouse.GetEndPosX()), int(g.mouse.GetEndPosY()))
 
-	// закрываем программу
-	//g.screenGlfw.SetShouldClose(true)
-
-	//g.pointssquare = g.pointssquare[:0]
 	// clear
 	clear(g.pointssquare)
-
-	// рисование квадрата
 	g.vao = g.makeVao()
+
+	// сделаем screenshot
+	scr.DoScreenshot()
+
+	// clipboard
+	scr.ScreenshotToClipboard()
+
+	// закрываем программу
+	g.screenGlfw.SetShouldClose(true)
 
 }
 

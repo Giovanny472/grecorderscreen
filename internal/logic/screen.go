@@ -24,5 +24,4 @@ func (s *screen) Show() {
 
 	// отображение окна для screenshot
 	s.glf.ShowGLFW()
-
 }
