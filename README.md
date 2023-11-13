@@ -5,7 +5,7 @@
 
 Программа позволяет выбрать область на экране с помощью библиотеки glfw.
 
-![gscreenshot](/asset/img/image.png)
+![gscreenshot](/asset/img/gscreenshot.png)
 
 
 
