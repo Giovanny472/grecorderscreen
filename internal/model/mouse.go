@@ -1,6 +1,9 @@
 package model
 
-import "github.com/go-gl/glfw/v3.3/glfw"
+import (
+	"github.com/Giovanny472/grecordscreen/internal/constant"
+	"github.com/go-gl/glfw/v3.3/glfw"
+)
 
 type OnMouseCoord func(float32, float32, float32, float32)
 
@@ -15,4 +18,7 @@ type Mouse interface {
 
 	SetMouseReleaseLeftButon(callBackRelease func())
 	SetMouseCoord(callBackCoord OnMouseCoord)
+
+	MouseState() constant.MouseStatus
+	SetMouseState(state constant.MouseStatus)
 }

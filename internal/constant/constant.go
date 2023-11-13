@@ -29,3 +29,5 @@ const (
 	MousePress
 	MouseRelease
 )
+
+const TimerToScreenshot = 3

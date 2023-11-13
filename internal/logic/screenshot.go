@@ -33,13 +33,13 @@ func (s *scrshot) DoScreenshot() {
 
 	img, err := screenshot.CaptureRect(s.rect)
 	if err != nil {
-		log.Fatal("невозможно сделать screenshot")
+		log.Fatal("невозможно сделать screenshot: ", err, ", Rect: ", s.rect)
 	}
 
 	bufImg := new(bytes.Buffer)
 	err = png.Encode(bufImg, img)
 	if err != nil {
-		log.Fatal("невозможно encode screenshot")
+		log.Fatal("невозможно encode screenshot:", err)
 	}
 
 	s.buffSc = bufImg.Bytes()

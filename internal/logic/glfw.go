@@ -10,6 +10,7 @@ import (
 	"github.com/Giovanny472/grecordscreen/internal/constant"
 	"github.com/Giovanny472/grecordscreen/internal/message"
 	"github.com/Giovanny472/grecordscreen/internal/model"
+
 	"github.com/go-gl/gl/v4.1-core/gl" //"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -33,6 +34,8 @@ type glform struct {
 	// vao
 	vao uint32
 
+	countToScreen int
+
 	err error
 }
 
@@ -42,7 +45,7 @@ func NewGlfw() model.GlFw {
 
 	if glf == nil {
 
-		glf = &glform{mouse: NewMouse(), openglProg: 0, vao: 0}
+		glf = &glform{mouse: NewMouse(), openglProg: 0, vao: 0, countToScreen: 0}
 
 		// on release
 		glf.mouse.SetMouseReleaseLeftButon(glf.onMouseRelease)
@@ -170,9 +173,28 @@ func (g *glform) programLoop() {
 		gl.BindVertexArray(g.vao)
 		gl.DrawArrays(gl.TRIANGLES, 0, 9)
 
+		if g.mouse.MouseState() == constant.MouseRelease {
+
+			if g.countToScreen < constant.TimerToScreenshot {
+				g.countToScreen++
+
+			} else {
+
+				// screenshot сделаем
+				g.screenshot()
+
+				g.mouse.SetMouseState(constant.MouseNoData)
+				g.countToScreen = 0
+
+				g.Close()
+			}
+		}
+
 		glfw.PollEvents()
 		g.screenGlfw.SwapBuffers()
+
 	}
+
 }
 
 func (g *glform) makeVao() uint32 {
@@ -190,48 +212,67 @@ func (g *glform) makeVao() uint32 {
 	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
 
 	return VAO
-
 }
 
 func (g *glform) keyPressCallback(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 
 	if key == glfw.KeyEscape {
-		window.SetShouldClose(true)
+		g.Close()
 	}
 }
 
 func (g *glform) coordinatesCallBack(xStart, yStart, xEnd, yEnd float32) {
 
-	fmt.Println("coordinatesCallBack")
-	fmt.Println("xStart: ", xStart, ", yStart:", yStart, " ,  xEnd:", xEnd, ", yEnd:", yEnd)
+	// обработка
+	g.ProcessingCoords(xStart, yStart, xEnd, yEnd)
+
+}
+
+func (g *glform) ProcessingCoords(xs, ys, xe, ye float32) {
 
 	// нормализация
-	g.normalize(xStart, yStart, xEnd, yEnd)
+	g.normalize(xs, ys, xe, ye)
 
 	// рисование квадрата
 	g.vao = g.makeVao()
 }
 
-// callback onrelease
-func (g *glform) onMouseRelease() {
-
-	// инициализация screenshot
-	scr := NewScreenshot()
-	scr.SetRectScreen(int(g.mouse.GetStartPosX()), int(g.mouse.GetStartPosY()),
-		int(g.mouse.GetEndPosX()), int(g.mouse.GetEndPosY()))
+func (g *glform) Clear() {
 
 	// clear
 	clear(g.pointssquare)
-	g.vao = g.makeVao()
+
+	g.vao = 0
+
+}
+
+func (g *glform) Close() {
+
+	// закрываем окно
+	g.screenGlfw.SetShouldClose(true)
+}
+
+// callback onrelease
+func (g *glform) onMouseRelease() {
+
+	// clear
+	g.Clear()
+}
+
+func (s *glform) screenshot() {
+
+	// инициализация screenshot
+	scr := NewScreenshot()
+
+	// площадь для screenshot
+	scr.SetRectScreen(int(s.mouse.GetStartPosX()), int(s.mouse.GetStartPosY()),
+		int(s.mouse.GetEndPosX()), int(s.mouse.GetEndPosY()))
 
 	// сделаем screenshot
 	scr.DoScreenshot()
 
 	// clipboard
 	scr.ScreenshotToClipboard()
-
-	// закрываем программу
-	g.screenGlfw.SetShouldClose(true)
 
 }
 
@@ -247,7 +288,7 @@ func (g *glform) normalize(xs, ys, xe, ye float32) {
 	// средний размер
 	mX := g.formWidth / 2
 	mY := g.formHeigth / 2
-	fmt.Println("mx:", mX, ",mY:", mY)
+	//fmt.Println("mx:", mX, ",mY:", mY)
 
 	if xs < float32(mX) {
 		xs = xs - float32(mX)
@@ -292,7 +333,7 @@ func (g *glform) normalize(xs, ys, xe, ye float32) {
 
 	newYs = (ys * 1.0) / float32(mY)
 	newYe = (ye * 1.0) / float32(mY)
-	fmt.Println("nxS: ", newXs, ", nyS:", newYs, " ,  nxE:", newXe, ", nyE:", newYe)
+	//fmt.Println("nxS: ", newXs, ", nyS:", newYs, " ,  nxE:", newXe, ", nyE:", newYe)
 
 	// создание 2Points
 	p3x := newXs

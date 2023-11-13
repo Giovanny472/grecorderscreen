@@ -94,3 +94,11 @@ func (m *mouse) MouseButton(w *glfw.Window, button glfw.MouseButton, action glfw
 		}
 	}
 }
+
+func (m *mouse) MouseState() constant.MouseStatus {
+	return m.mouseStat
+}
+
+func (m *mouse) SetMouseState(state constant.MouseStatus) {
+	m.mouseStat = state
+}
