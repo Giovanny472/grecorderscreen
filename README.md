@@ -15,4 +15,4 @@
 https://github.com/Giovanny472/gscreenshot/assets/43882462/cdc30927-4055-4a4d-b065-bf576c4526aa
 
 ## Установка программы
-Для установки **gScreenshot** можно использовать [setup](https://github.com/Giovanny472/gscreenshot/releases/tag/v0.1). С помощью ctrl+alt+s можно открыть программу.
+Для установки **gScreenshot** можно использовать [gScreenshot_setup.exe](https://github.com/Giovanny472/gscreenshot/releases/tag/v0.1). С помощью ctrl+alt+s можно открыть программу.
