@@ -1,6 +1,8 @@
 
 # **gScreenshot**
 
+| [ру](https://github.com/Giovanny472/gscreenshot) | [es](https://github.com/Giovanny472/gscreenshot/blob/main/README.es.md) |
+
 Простая программа для скриншотов. Написано на языке go.  
 Эта программа основана на библиотеке  [screenshot](https://github.com/kbinani/screenshot). C помощью библиотек: [glfw](https://github.com/go-gl/glfw) и [gl](https://github.com/go-gl/gl) был реализован интерфейс пользователя, который позволяет выбрать область(координаты) на экране.  Эти координаты передаются в качестве параметров в библиотеку [screenshot](https://github.com/kbinani/screenshot), чтобы сделать снимок экрана. После получения изображения выбранной области экрана используется библиотека [clipboard](https://github.com/golang-design/clipboard) для передачи изображения в буфер обмена. Таким образом можно получить изображение скриншота простым нажатием ctrl+v.
 
