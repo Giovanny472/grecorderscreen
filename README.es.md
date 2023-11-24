@@ -16,5 +16,5 @@ Este programa esta basado en la biblioteca [screenshot](https://github.com/kbina
 
 https://github.com/Giovanny472/gscreenshot/assets/43882462/cdc30927-4055-4a4d-b065-bf576c4526aa
 
-## Установка программы
+## Instalacion del programa
 Para instalar **gScreenshot** se puede utilizar [gScreenshot_setup.exe](https://github.com/Giovanny472/gscreenshot/releases/tag/v0.1). con la combinacion ctrl+alt+s se ejecuta el programa.
