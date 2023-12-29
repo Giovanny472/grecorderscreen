@@ -1,9 +1,14 @@
 package constant
 
+//import "C"
+
+var (
+	ScreenWidth  int = 1920
+	ScreenHeight int = 1050
+)
+
 const (
-	ScreenWidth  = 800
-	ScreenHeight = 600
-	AppName      = "gScreenshot"
+	AppName = "gScreenshot"
 
 	VertexShaderSource = `
 		#version 410
@@ -31,3 +36,25 @@ const (
 )
 
 const TimerToScreenshot = 3
+
+func init() {
+
+}
+
+/*
+func getSizeScreenLinux() (x, y int) {
+	dy := C.XOpenDisplay(nil)
+	if dy == nil {
+		return 0, 0
+	}
+	defer C.XCloseDisplay(dy)
+
+	screen := C.XDefaultScreenOfDisplay(dy)
+	width := int(C.XWidthOfScreen(screen))
+	height := int(C.XHeightOfScreen(screen))
+	if width == 0 || height == 0 {
+		return nil
+	}
+	return width, height
+}
+*/

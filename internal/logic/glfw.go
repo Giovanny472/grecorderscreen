@@ -55,6 +55,7 @@ func NewGlfw() model.GlFw {
 
 		// points создание
 		glf.pointssquare = make([]float32, 27)
+		//glf.pointssquare = make([]float32, 9)
 
 	}
 
@@ -77,8 +78,9 @@ func (g *glform) initGLFW() {
 		log.Fatal(message.GlfwInit)
 	}
 
-	glfw.WindowHint(glfw.TransparentFramebuffer, glfw.True)
+	glfw.WindowHint(glfw.Resizable, glfw.True)
 	glfw.WindowHint(glfw.Maximized, glfw.True)
+	glfw.WindowHint(glfw.TransparentFramebuffer, glfw.True)
 	glfw.WindowHint(glfw.Decorated, glfw.False)
 	glfw.WindowHint(glfw.ContextVersionMajor, 4)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
@@ -86,7 +88,7 @@ func (g *glform) initGLFW() {
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
 	// создание glfw
-	g.screenGlfw, g.err = glfw.CreateWindow(constant.ScreenWidth, constant.ScreenWidth, constant.AppName, nil, nil)
+	g.screenGlfw, g.err = glfw.CreateWindow(constant.ScreenWidth, constant.ScreenHeight, constant.AppName, nil, nil)
 	if g.err != nil {
 		log.Fatal(message.GlfwCreateWindow)
 	}
@@ -168,7 +170,7 @@ func (g *glform) programLoop() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(g.openglProg)
 		gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
-		g.screenGlfw.SetOpacity(0.5)
+		g.screenGlfw.SetOpacity(0.9)
 
 		gl.BindVertexArray(g.vao)
 		gl.DrawArrays(gl.TRIANGLES, 0, 9)
@@ -278,17 +280,12 @@ func (s *glform) screenshot() {
 
 func (g *glform) normalize(xs, ys, xe, ye float32) {
 
-	// clear
-	// for idx := range g.pointssquare {
-	// 	g.pointssquare[idx] = 0
-	// }
 	clear(g.pointssquare)
-	//g.pointssquare = g.pointssquare[:0]
 
 	// средний размер
 	mX := g.formWidth / 2
 	mY := g.formHeigth / 2
-	//fmt.Println("mx:", mX, ",mY:", mY)
+	// fmt.Println("win64 size-windows W:", g.formWidth, " , H:", g.formHeigth)
 
 	if xs < float32(mX) {
 		xs = xs - float32(mX)
@@ -333,7 +330,7 @@ func (g *glform) normalize(xs, ys, xe, ye float32) {
 
 	newYs = (ys * 1.0) / float32(mY)
 	newYe = (ye * 1.0) / float32(mY)
-	//fmt.Println("nxS: ", newXs, ", nyS:", newYs, " ,  nxE:", newXe, ", nyE:", newYe)
+	// fmt.Println("windows nxS: ", newXs, ", nyS:", newYs, " ,  nxE:", newXe, ", nyE:", newYe)
 
 	// создание 2Points
 	p3x := newXs
